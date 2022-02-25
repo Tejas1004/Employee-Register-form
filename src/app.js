@@ -6,6 +6,7 @@ const hbs = require('hbs');
 require('./db/conn');
 const Register = require('./models/registers');
 const { urlencoded } = require('express');
+const { resolveSoa } = require('dns');
 
 
 const static_path = path.join(__dirname,"../public");
@@ -60,7 +61,23 @@ app.post('/register',async(req,res)=>{
         res.status(400).send(error);
     }
 })
-
+app.post("/login",async(req,res)=>{
+    try {
+        const email = req.body.email;
+        const password = req.body.password;
+   
+        const username = await Register.findOne({ email:email });
+       // const userpwd  = await Register.findOne({ password:password });
+        if(username.password === password){
+            res.status(201).render("index");
+        }
+        else{
+            res.send("password are not matching");
+        }
+    } catch (error) {
+        res.status(401).send("invalid data");
+    }
+})
 app.listen(port,( )=>{
     console.log(`server is running on ${port}`);
 })
