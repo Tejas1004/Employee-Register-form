@@ -32,6 +32,7 @@ app.get('/login',(req,res)=>{
 app.get('/register',(req,res)=>{
     res.render("register");
 })
+//Register form
 app.post('/register',async(req,res)=>{
     try {
         const password = req.body.password;
@@ -61,6 +62,8 @@ app.post('/register',async(req,res)=>{
         res.status(400).send(error);
     }
 })
+
+//Login form
 app.post("/login",async(req,res)=>{
     try {
         const email = req.body.email;
@@ -78,6 +81,18 @@ app.post("/login",async(req,res)=>{
         res.status(401).send("invalid data");
     }
 })
+//password securing using bcrypt
+const bcrypt = require('bcryptjs');
+
+const securepwd = async(password)=>{
+    const passwordHash= await bcrypt.hash(password,10);
+    console.log(passwordHash);
+    const passwordMatch= await bcrypt.compare("ghf",passwordHash);
+    console.log(passwordMatch);
+}
+
+securepwd("ghf");
+
 app.listen(port,( )=>{
     console.log(`server is running on ${port}`);
 })
